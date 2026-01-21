@@ -1,42 +1,69 @@
-import { FlatList, Image, StyleSheet, Text, View } from 'react-native';
+import { useFeed } from '@/src/features/feed/feed.hook';
+import { Post } from '@/src/features/feed/feed.type';
+import { useState } from 'react';
+import { ActivityIndicator, FlatList, Image, RefreshControl, StyleSheet, Text, View } from 'react-native';
 
 export default function Feed() {
-    const posts = [
-        { id: 1, author: 'Ikmal Faris', title: 'Cihuy', content: 'Halo dunia', time: '5 jam lalu' },
-        { id: 2, author: 'Ikmal Faris', title: 'Perkodingan', content: 'Ngodeng', time: '2 jam lalu' },
-        { id: 3, author: 'Ikmal Faris', title: 'Udan', content: 'Udan rek!', time: '39 menit yang lalu' },
-        { id: 4, author: 'Ikmal Faris', title: 'Panas', content: 'Panas rek!', time: '10 menit yang lalu' },
-        { id: 5, author: 'Ikmal Faris', title: 'Pengen ados', content: 'Pengen ados rek!', time: '5 menit yang lalu' },
-        { id: 6, author: 'Ikmal Faris', title: 'Judul', content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque maximus pharetra laoreet. Cras porta eros et risus ultricies tincidunt. Praesent nisl tortor, iaculis nec ultricies at, mollis sed lacus. Sed dignissim at dolor nec consequat.', time: '1 menit yang lalu' },
-    ];
+    const { posts, isLoading, error, refresh } = useFeed();
+    const [refreshing, setRefreshing] = useState<boolean>(false);
+
+    const onRefresh = async () => {
+        setRefreshing(true);
+        await refresh();
+        setRefreshing(false);
+    };
+
+    if (isLoading && !refreshing) {
+        return (
+            <View style={styles.centerContainer}>
+                <ActivityIndicator size="large" color="#4f46e5" />
+                <Text style={styles.loadingText}>Loading posts...</Text>
+            </View>
+        );
+    }
+
+    if (error) {
+        return (
+            <View style={styles.centerContainer}>
+                <Text style={styles.errorText}>{error}</Text>
+            </View>
+        );
+    }
+
+    const renderPost = ({ item: post }: { item: Post }) => (
+        <View style={styles.card}>
+            <View style={styles.cardHeader}>
+                <Image
+                    source={require('@/assets/images/fgo.jpeg')}
+                    style={styles.avatarImage}
+                />
+                <View style={styles.authorInfo}>
+                    <Text style={styles.authorName}>{post.author}</Text>
+                    <Text style={styles.time}>{post.time}</Text>
+                </View>
+            </View>
+            <Text style={styles.title}>{post.title}</Text>
+            <Text style={styles.content}>{post.content}</Text>
+        </View>
+    );
 
     return (
         <View style={styles.container}>
             <Text style={styles.header}>Feed</Text>
             <FlatList
-                data={[...posts].reverse()}
+                data={posts}
                 keyExtractor={(post) => post.id.toString()}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.listContent}
-                renderItem={({ item: post }) => (
-                    <View style={styles.card}>
-                        <View style={styles.cardHeader}>
-                            {/* <View style={styles.avatar}>
-                                <Text style={styles.avatarText}>{post.author.charAt(0)}</Text>
-                            </View> */}
-                            <Image
-                                source={require('@/assets/images/fgo.jpeg')}
-                                style={styles.avatarImage}
-                            />
-                            <View style={styles.authorInfo}>
-                                <Text style={styles.authorName}>{post.author}</Text>
-                                <Text style={styles.time}>{post.time}</Text>
-                            </View>
-                        </View>
-                        <Text style={styles.title}>{post.title}</Text>
-                        <Text style={styles.content}>{post.content}</Text>
-                    </View>
-                )}
+                renderItem={renderPost}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                        colors={['#4f46e5']}
+                        tintColor="#4f46e5"
+                    />
+                }
             />
         </View>
     );
@@ -115,5 +142,20 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#444444',
         lineHeight: 20,
+    },
+    centerContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#f5f5f5',
+    },
+    loadingText: {
+        marginTop: 12,
+        fontSize: 14,
+        color: '#666666',
+    },
+    errorText: {
+        fontSize: 16,
+        color: '#ef4444',
     },
 });
