@@ -1,14 +1,8 @@
+import { usePost } from '@/src/context/PostContext';
 import { FlatList, Image, StyleSheet, Text, View } from 'react-native';
 
 export default function Feed() {
-    const posts = [
-        { id: 1, author: 'Ikmal Faris', title: 'Cihuy', content: 'Halo dunia', time: '5 jam lalu' },
-        { id: 2, author: 'Ikmal Faris', title: 'Perkodingan', content: 'Ngodeng', time: '2 jam lalu' },
-        { id: 3, author: 'Ikmal Faris', title: 'Udan', content: 'Udan rek!', time: '39 menit yang lalu' },
-        { id: 4, author: 'Ikmal Faris', title: 'Panas', content: 'Panas rek!', time: '10 menit yang lalu' },
-        { id: 5, author: 'Ikmal Faris', title: 'Pengen ados', content: 'Pengen ados rek!', time: '5 menit yang lalu' },
-        { id: 6, author: 'Ikmal Faris', title: 'Judul', content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque maximus pharetra laoreet. Cras porta eros et risus ultricies tincidunt. Praesent nisl tortor, iaculis nec ultricies at, mollis sed lacus. Sed dignissim at dolor nec consequat.', time: '1 menit yang lalu' },
-    ];
+    const { posts } = usePost();
 
     return (
         <View style={styles.container}>
@@ -29,8 +23,10 @@ export default function Feed() {
                                 style={styles.avatarImage}
                             />
                             <View style={styles.authorInfo}>
-                                <Text style={styles.authorName}>{post.author}</Text>
-                                <Text style={styles.time}>{post.time}</Text>
+                                {/* <Text style={styles.authorName}>{post.author}</Text>
+                                <Text style={styles.time}>{post.time}</Text> */}
+                                <Text style={styles.authorName}>Ikmal Faris</Text>
+                                <Text style={styles.time}>{post.id}</Text>
                             </View>
                         </View>
                         <Text style={styles.title}>{post.title}</Text>
@@ -38,6 +34,11 @@ export default function Feed() {
                     </View>
                 )}
             />
+            {posts.length === 0 && (
+                <View style={styles.emptyState}>
+                    <Text style={styles.emptyStateText}>No posts yet</Text>
+                </View>
+            )}
         </View>
     );
 }
@@ -115,5 +116,18 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#444444',
         lineHeight: 20,
+    },
+    emptyState: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    emptyStateText: {
+        fontSize: 16,
+        color: '#666666',
     },
 });

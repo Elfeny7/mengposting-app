@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { usePost } from '@/src/context/PostContext';
 
 export default function Create() {
+    const { addPost } = usePost();
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
 
@@ -10,12 +12,8 @@ export default function Create() {
             Alert.alert('Error', 'Title and content must be filled!');
             return;
         }
-        const newPost = {
-            id: Date.now(),
-            title,
-            content,
-        };
-        console.log('Post:', newPost);
+
+        addPost(title, content);
 
         setTitle('');
         setContent('');
