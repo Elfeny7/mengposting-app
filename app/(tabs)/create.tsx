@@ -1,6 +1,7 @@
-import { useState } from 'react';
-import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import Button from '@/src/components/Button';
 import { usePost } from '@/src/context/PostContext';
+import { useState } from 'react';
+import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 
 export default function Create() {
     const { addPost } = usePost();
@@ -50,13 +51,7 @@ export default function Create() {
                         textAlignVertical="top"
                     />
 
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={handleSubmit}
-                        activeOpacity={0.8}
-                    >
-                        <Text style={styles.buttonText}>Create Post</Text>
-                    </TouchableOpacity>
+                    <Button title="Create Post" onPress={handleSubmit} />
                 </View>
             </ScrollView>
         </KeyboardAvoidingView>
@@ -107,16 +102,5 @@ const styles = StyleSheet.create({
         height: 140,
         textAlignVertical: 'top',
     },
-    button: {
-        backgroundColor: '#4f46e5',
-        borderRadius: 10,
-        paddingVertical: 14,
-        marginTop: 24,
-        alignItems: 'center',
-    },
-    buttonText: {
-        color: '#ffffff',
-        fontSize: 16,
-        fontWeight: '600',
-    },
+
 });
