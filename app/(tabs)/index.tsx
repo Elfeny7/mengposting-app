@@ -26,7 +26,7 @@ export default function Feed() {
                                 {/* <Text style={styles.authorName}>{post.author}</Text>
                                 <Text style={styles.time}>{post.time}</Text> */}
                                 <Text style={styles.authorName}>Ikmal Faris</Text>
-                                <Text style={styles.time}>{post.id}</Text>
+                                <Text style={styles.time}>{new Date(Number(post.id)).toLocaleString('id-ID')}</Text>
                             </View>
                         </View>
                         <Text style={styles.title}>{post.title}</Text>
